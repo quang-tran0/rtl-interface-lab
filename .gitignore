@@ -1,0 +1,10 @@
+work/
+log/
+modelsim.ini
+transcript
+run.log
+*.log
+*.wlf
+*.ucdb
+coverage/
+
