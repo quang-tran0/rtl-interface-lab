@@ -7,21 +7,24 @@ module i2c_master (
     output reg  scl,
     inout  wire sda,
     output reg  busy,
-    output reg  done
+    output reg  done,
+    output reg  ack_error
 );
 
-    reg [2:0] state;
+    reg [3:0] state;
     reg       sda_low;
     reg [7:0] data_reg;
     reg [2:0] bit_count;
 
-    localparam IDLE         = 3'd0;
-    localparam START        = 3'd1;
-    localparam BIT_HIGH     = 3'd2;
-    localparam BIT_LOW      = 3'd3;
-    localparam STOP_LOW     = 3'd4;
-    localparam STOP_HIGH    = 3'd5;
-    localparam STOP_RELEASE = 3'd6;
+    localparam IDLE         = 4'd0;
+    localparam START        = 4'd1;
+    localparam BIT_HIGH     = 4'd2;
+    localparam BIT_LOW      = 4'd3;
+    localparam ACK_LOW      = 4'd4;
+    localparam ACK_HIGH     = 4'd5;
+    localparam STOP_LOW     = 4'd6;
+    localparam STOP_HIGH    = 4'd7;
+    localparam STOP_RELEASE = 4'd8;
 
     assign sda = sda_low ? 1'b0 : 1'bz;
 
@@ -34,6 +37,7 @@ module i2c_master (
             bit_count <= 0;
             busy    <= 1'b0;
             done    <= 1'b0;
+            ack_error <= 1'b0;
         end else begin
             done <= 1'b0;
             case (state)
@@ -42,6 +46,7 @@ module i2c_master (
                     sda_low <= 1'b1;
                     data_reg <= data_in;
                     busy    <= 1'b1;
+                    ack_error <= 1'b0;
                     state   <= START;
                 end
 
@@ -55,7 +60,7 @@ module i2c_master (
                 BIT_HIGH: if (half_tick) begin
                     scl <= 1'b1;
                     if (bit_count == 0)
-                        state <= STOP_LOW;
+                        state <= ACK_LOW;
                     else begin
                         bit_count <= bit_count - 1'b1;
                         state     <= BIT_LOW;
@@ -66,6 +71,19 @@ module i2c_master (
                     scl     <= 1'b0;
                     sda_low <= ~data_reg[bit_count];
                     state   <= BIT_HIGH;
+                end
+
+                ACK_LOW: if (half_tick) begin
+                    // wait for ack
+                    scl     <= 1'b0;
+                    sda_low <= 1'b0;
+                    state   <= ACK_HIGH;
+                end
+
+                ACK_HIGH: if (half_tick) begin
+                    scl       <= 1'b1;
+                    ack_error <= sda;
+                    state     <= STOP_LOW;
                 end
 
                 STOP_LOW: if (half_tick) begin
