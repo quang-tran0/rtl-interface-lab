@@ -1,21 +1,21 @@
 `timescale 1ns/1ps
 
-module i2c_write_tb;
+module i2c_ack_tb;
 
     reg        clk;
     reg        reset_n;
     reg        start;
     reg  [7:0] data_in;
+    reg        slave_low;
     wire       half_tick;
     wire       scl;
     wire       sda;
     wire       busy;
     wire       done;
     wire       ack_error;
-    reg  [7:0] seen_data;
-    integer    i;
 
     pullup(sda);
+    assign sda = slave_low ? 1'b0 : 1'bz;
 
     i2c_clock_divider #(.CLOCKS_PER_HALF(2)) divider (
         .clk(clk),
@@ -42,31 +42,38 @@ module i2c_write_tb;
         clk       = 0;
         reset_n   = 0;
         start     = 0;
-        data_in   = 8'hA6;
-        seen_data = 0;
+        data_in   = 8'h52;
+        slave_low = 0;
 
         repeat (3) @(posedge clk);
         reset_n = 1;
+
         @(posedge clk);
         start = 1;
         @(posedge clk);
         start = 0;
-
-        @(negedge sda);
-        if (scl !== 1'b1) $fatal(1, "start did not occur while scl high");
-
-        for (i = 7; i >= 0; i = i - 1) begin
-            @(posedge scl);
-            seen_data[i] = sda;
-        end
-
+        repeat (8) @(posedge scl);
+        @(negedge scl);
+        slave_low = 1;
+        @(posedge scl);
+        #1;
+        if (ack_error !== 1'b0) $fatal(1, "ack was missed");
+        @(negedge scl);
+        slave_low = 0;
         wait (done);
-        if (seen_data !== data_in)
-            $fatal(1, "saw %02h expected %02h", seen_data, data_in);
-        if (scl !== 1'b1 || sda !== 1'b1)
-            $fatal(1, "bus not idle after stop");
 
-        $display("I2C WRITE PASS");
+        @(posedge clk);
+        start = 1;
+        @(posedge clk);
+        start = 0;
+        repeat (8) @(posedge scl);
+        @(negedge scl);
+        @(posedge scl);
+        #1;
+        if (ack_error !== 1'b1) $fatal(1, "nack was missed");
+        wait (done);
+
+        $display("I2C ACK/NACK PASS");
         $finish;
     end
 
