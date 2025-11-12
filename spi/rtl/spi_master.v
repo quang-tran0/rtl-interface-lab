@@ -1,5 +1,6 @@
 module spi_master #(
-    parameter CLOCK_DIVIDER = 2
+    parameter CLOCK_DIVIDER = 2,
+    parameter CPOL = 0
 ) (
     input  wire       clk,
     input  wire       reset_n,
@@ -26,7 +27,7 @@ module spi_master #(
             tx_reg      <= 0;
             rx_reg      <= 0;
             rx_data     <= 0;
-            sclk        <= 1'b0;
+            sclk        <= CPOL;
             mosi        <= 1'b0;
             cs_n        <= 1'b1;
             busy        <= 1'b0;
@@ -34,7 +35,7 @@ module spi_master #(
         end else begin
             done <= 1'b0;
             if (!busy) begin
-                sclk <= 1'b0;
+                sclk <= CPOL;
                 cs_n <= 1'b1;
                 if (start) begin
                     tx_reg      <= tx_data;
@@ -46,12 +47,12 @@ module spi_master #(
                 end
             end else if (clock_count == CLOCK_DIVIDER - 1) begin
                 clock_count <= 0;
-                if (!sclk) begin
+                if (sclk == CPOL) begin
                     // sample rx bit
-                    sclk              <= 1'b1;
+                    sclk              <= ~CPOL;
                     rx_reg[bit_count] <= miso;
                 end else begin
-                    sclk <= 1'b0;
+                    sclk <= CPOL;
                     if (bit_count == 0) begin
                         rx_data <= rx_reg;
                         cs_n    <= 1'b1;
