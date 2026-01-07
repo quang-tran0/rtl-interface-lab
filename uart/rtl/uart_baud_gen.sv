@@ -1,14 +1,14 @@
 module uart_baud_gen #(
     parameter CLOCKS_PER_TICK = 27
 ) (
-    input  wire clk,
-    input  wire reset_n,
-    output reg  sample_tick
+    input  logic clk,
+    input  logic reset_n,
+    output logic sample_tick
 );
 
-    integer count;
+    int unsigned count;
 
-    always @(posedge clk or negedge reset_n) begin
+    always_ff @(posedge clk or negedge reset_n) begin
         if (!reset_n) begin
             count       <= 0;
             sample_tick <= 1'b0;

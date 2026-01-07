@@ -1,25 +1,21 @@
 module uart_rx #(
     parameter TICKS_PER_BIT = 16
 ) (
-    input  wire       clk,
-    input  wire       reset_n,
-    input  wire       sample_tick,
-    input  wire       rx,
-    output reg  [7:0] data_out,
-    output reg        data_valid
+    input  logic       clk,
+    input  logic       reset_n,
+    input  logic       sample_tick,
+    input  logic       rx,
+    output logic [7:0] data_out,
+    output logic       data_valid
 );
 
-    reg [1:0] state;
-    reg [3:0] tick_count;
-    reg [2:0] bit_count;
-    reg [7:0] data_reg;
+    typedef enum logic [1:0] {IDLE, START, DATA, STOP} state_t;
+    state_t state;
+    logic [3:0] tick_count;
+    logic [2:0] bit_count;
+    logic [7:0] data_reg;
 
-    localparam IDLE  = 2'd0;
-    localparam START = 2'd1;
-    localparam DATA  = 2'd2;
-    localparam STOP  = 2'd3;
-
-    always @(posedge clk or negedge reset_n) begin
+    always_ff @(posedge clk or negedge reset_n) begin
         if (!reset_n) begin
             state      <= IDLE;
             tick_count <= 0;
