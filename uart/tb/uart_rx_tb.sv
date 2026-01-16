@@ -2,14 +2,14 @@
 
 module uart_rx_tb;
 
-    reg        clk;
-    reg        reset_n;
-    reg        rx;
-    wire       sample_tick;
-    wire [7:0] data_out;
-    wire       data_valid;
-    reg  [7:0] sent_data;
-    integer    i;
+    logic       clk;
+    logic       reset_n;
+    logic       rx;
+    logic       sample_tick;
+    logic [7:0] data_out;
+    logic       data_valid;
+    logic [7:0] sent_data;
+    int         i;
 
     uart_baud_gen #(.CLOCKS_PER_TICK(2)) baud_gen (
         .clk(clk),

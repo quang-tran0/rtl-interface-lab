@@ -2,15 +2,15 @@
 
 module uart_loopback_tb;
 
-    reg        clk;
-    reg        reset_n;
-    reg        start;
-    reg  [7:0] data_in;
-    wire       sample_tick;
-    wire       serial;
-    wire       busy;
-    wire [7:0] data_out;
-    wire       data_valid;
+    logic       clk;
+    logic       reset_n;
+    logic       start;
+    logic [7:0] data_in;
+    logic       sample_tick;
+    logic       serial;
+    logic       busy;
+    logic [7:0] data_out;
+    logic       data_valid;
 
     uart_baud_gen #(.CLOCKS_PER_TICK(2)) baud_gen (
         .clk(clk),
