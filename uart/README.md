@@ -1,6 +1,6 @@
 # UART
 
-A small UART transmitter and receiver written as a first Verilog exercise.
+A small UART transmitter and receiver, now rewritten in SystemVerilog.
 
 ## Features
 
@@ -22,7 +22,7 @@ A small UART transmitter and receiver written as a first Verilog exercise.
 
 ```sh
 vlib work
-vlog rtl/*.v tb/uart_loopback_tb.v
+vlog -sv rtl/*.sv tb/uart_loopback_tb.sv
 vsim -c uart_loopback_tb -do "run -all; quit -f"
 ```
 
