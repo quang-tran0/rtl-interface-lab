@@ -1,14 +1,14 @@
 module i2c_clock_divider #(
     parameter CLOCKS_PER_HALF = 250
 ) (
-    input  wire clk,
-    input  wire reset_n,
-    output reg  half_tick
+    input  logic clk,
+    input  logic reset_n,
+    output logic half_tick
 );
 
-    integer count;
+    int unsigned count;
 
-    always @(posedge clk or negedge reset_n) begin
+    always_ff @(posedge clk or negedge reset_n) begin
         if (!reset_n) begin
             count     <= 0;
             half_tick <= 1'b0;

@@ -1,34 +1,29 @@
 module i2c_master (
-    input  wire clk,
-    input  wire reset_n,
-    input  wire half_tick,
-    input  wire start,
-    input  wire [7:0] data_in,
-    output reg  scl,
+    input  logic       clk,
+    input  logic       reset_n,
+    input  logic       half_tick,
+    input  logic       start,
+    input  logic [7:0] data_in,
+    output logic       scl,
     inout  wire sda,
-    output reg  busy,
-    output reg  done,
-    output reg  ack_error
+    output logic busy,
+    output logic done,
+    output logic ack_error
 );
 
-    reg [3:0] state;
-    reg       sda_low;
-    reg [7:0] data_reg;
-    reg [2:0] bit_count;
+    typedef enum logic [3:0] {
+        IDLE, START, BIT_HIGH, BIT_LOW, ACK_LOW,
+        ACK_HIGH, STOP_LOW, STOP_HIGH, STOP_RELEASE
+    } state_t;
 
-    localparam IDLE         = 4'd0;
-    localparam START        = 4'd1;
-    localparam BIT_HIGH     = 4'd2;
-    localparam BIT_LOW      = 4'd3;
-    localparam ACK_LOW      = 4'd4;
-    localparam ACK_HIGH     = 4'd5;
-    localparam STOP_LOW     = 4'd6;
-    localparam STOP_HIGH    = 4'd7;
-    localparam STOP_RELEASE = 4'd8;
+    state_t state;
+    logic       sda_low;
+    logic [7:0] data_reg;
+    logic [2:0] bit_count;
 
     assign sda = sda_low ? 1'b0 : 1'bz;
 
-    always @(posedge clk or negedge reset_n) begin
+    always_ff @(posedge clk or negedge reset_n) begin
         if (!reset_n) begin
             state   <= IDLE;
             scl     <= 1'b1;
