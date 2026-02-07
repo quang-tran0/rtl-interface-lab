@@ -2,18 +2,18 @@
 
 module i2c_write_tb;
 
-    reg        clk;
-    reg        reset_n;
-    reg        start;
-    reg  [7:0] data_in;
-    wire       half_tick;
-    wire       scl;
+    logic       clk;
+    logic       reset_n;
+    logic       start;
+    logic [7:0] data_in;
+    logic       half_tick;
+    logic       scl;
     wire       sda;
-    wire       busy;
-    wire       done;
-    wire       ack_error;
-    reg  [7:0] seen_data;
-    integer    i;
+    logic       busy;
+    logic       done;
+    logic       ack_error;
+    logic [7:0] seen_data;
+    int         i;
 
     pullup(sda);
 
