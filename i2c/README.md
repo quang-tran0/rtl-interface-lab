@@ -1,6 +1,6 @@
 # I2C
 
-A small Verilog I2C master exercise for writing one byte.
+A small SystemVerilog I2C master exercise for writing one byte.
 
 ## Features
 
@@ -24,7 +24,7 @@ A small Verilog I2C master exercise for writing one byte.
 
 ```sh
 vlib work
-vlog rtl/*.v tb/i2c_ack_tb.v
+vlog -sv rtl/*.sv tb/i2c_ack_tb.sv
 vsim -c i2c_ack_tb -do "run -all; quit -f"
 ```
 
