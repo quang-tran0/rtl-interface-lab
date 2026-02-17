@@ -1,27 +1,27 @@
 module spi_master #(
-    parameter CLOCK_DIVIDER = 2,
-    parameter CPOL = 0,
-    parameter CPHA = 0
+    parameter int CLOCK_DIVIDER = 2,
+    parameter bit CPOL = 0,
+    parameter bit CPHA = 0
 ) (
-    input  wire       clk,
-    input  wire       reset_n,
-    input  wire       start,
-    input  wire [7:0] tx_data,
-    input  wire       miso,
-    output reg        sclk,
-    output reg        mosi,
-    output reg        cs_n,
-    output reg  [7:0] rx_data,
-    output reg        busy,
-    output reg        done
+    input  logic       clk,
+    input  logic       reset_n,
+    input  logic       start,
+    input  logic [7:0] tx_data,
+    input  logic       miso,
+    output logic       sclk,
+    output logic       mosi,
+    output logic       cs_n,
+    output logic [7:0] rx_data,
+    output logic       busy,
+    output logic       done
 );
 
-    integer    clock_count;
-    reg [2:0]  bit_count;
-    reg [7:0]  tx_reg;
-    reg [7:0]  rx_reg;
+    int unsigned clock_count;
+    logic [2:0] bit_count;
+    logic [7:0] tx_reg;
+    logic [7:0] rx_reg;
 
-    always @(posedge clk or negedge reset_n) begin
+    always_ff @(posedge clk or negedge reset_n) begin
         if (!reset_n) begin
             clock_count <= 0;
             bit_count   <= 0;
