@@ -2,18 +2,18 @@
 
 module spi_modes_tb;
 
-    reg        clk;
-    reg        reset_n;
-    reg        start;
-    reg  [7:0] tx_data;
-    wire [3:0] sclk;
-    wire [3:0] mosi;
-    wire [3:0] cs_n;
-    wire [3:0] done;
-    wire [7:0] rx_data0;
-    wire [7:0] rx_data1;
-    wire [7:0] rx_data2;
-    wire [7:0] rx_data3;
+    logic       clk;
+    logic       reset_n;
+    logic       start;
+    logic [7:0] tx_data;
+    logic [3:0] sclk;
+    logic [3:0] mosi;
+    logic [3:0] cs_n;
+    logic [3:0] done;
+    logic [7:0] rx_data0;
+    logic [7:0] rx_data1;
+    logic [7:0] rx_data2;
+    logic [7:0] rx_data3;
 
     spi_master #(.CLOCK_DIVIDER(2), .CPOL(0), .CPHA(0)) mode0 (
         .clk(clk), .reset_n(reset_n), .start(start), .tx_data(tx_data),

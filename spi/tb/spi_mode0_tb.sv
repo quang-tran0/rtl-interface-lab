@@ -2,17 +2,17 @@
 
 module spi_mode0_tb;
 
-    reg        clk;
-    reg        reset_n;
-    reg        start;
-    reg  [7:0] tx_data;
-    wire       sclk;
-    wire       mosi;
-    wire       miso;
-    wire       cs_n;
-    wire [7:0] rx_data;
-    wire       busy;
-    wire       done;
+    logic       clk;
+    logic       reset_n;
+    logic       start;
+    logic [7:0] tx_data;
+    logic       sclk;
+    logic       mosi;
+    logic       miso;
+    logic       cs_n;
+    logic [7:0] rx_data;
+    logic       busy;
+    logic       done;
 
     assign miso = mosi;
 
