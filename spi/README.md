@@ -1,6 +1,6 @@
 # SPI
 
-A small Verilog SPI master for single-byte transfers.
+A small SystemVerilog SPI master for single-byte transfers.
 
 ## Features
 
@@ -23,7 +23,7 @@ A small Verilog SPI master for single-byte transfers.
 
 ```sh
 vlib work
-vlog rtl/*.v tb/*.v
+vlog -sv rtl/*.sv tb/*.sv
 vsim -c spi_modes_tb -do "run -all; quit -f"
 ```
 
