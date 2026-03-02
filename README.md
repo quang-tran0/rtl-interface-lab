@@ -1,6 +1,6 @@
 # RTL Interface Lab
 
-Small protocol exercises built while learning RTL design and verification.
+Small protocol exercises built while learning RTL design.
 
 ## Protocols
 
@@ -16,22 +16,10 @@ Each protocol currently keeps hand-written RTL in `rtl/` and directed tests in `
 
 ## Simulation
 
-The examples use QuestaSim. Compile and run a representative test for each
-protocol with:
+Run all QuestaSim tests for each protocol with:
 
 ```sh
-cd uart
-vlib work
-vlog -sv rtl/*.sv tb/*.sv
-vsim -c uart_loopback_tb -do "run -all; quit -f"
-
-cd ../i2c
-vlib work
-vlog -sv rtl/*.sv tb/*.sv
-vsim -c i2c_ack_tb -do "run -all; quit -f"
-
-cd ../spi
-vlib work
-vlog -sv rtl/*.sv tb/*.sv
-vsim -c spi_modes_tb -do "run -all; quit -f"
+make -C uart/sim all
+make -C i2c/sim all
+make -C spi/sim all
 ```
