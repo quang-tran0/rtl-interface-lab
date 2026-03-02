@@ -14,15 +14,24 @@ Small protocol exercises built while learning RTL design and verification.
 
 Each protocol currently keeps hand-written RTL in `rtl/` and directed tests in `tb/`.
 
-## Tools
+## Simulation
 
-The examples use QuestaSim commands:
+The examples use QuestaSim. Compile and run a representative test for each
+protocol with:
 
 ```sh
 cd uart
 vlib work
-vlog rtl/*.v tb/uart_loopback_tb.v
+vlog -sv rtl/*.sv tb/*.sv
 vsim -c uart_loopback_tb -do "run -all; quit -f"
-```
 
-Later commits follow the progression from Verilog into SystemVerilog and reusable verification.
+cd ../i2c
+vlib work
+vlog -sv rtl/*.sv tb/*.sv
+vsim -c i2c_ack_tb -do "run -all; quit -f"
+
+cd ../spi
+vlib work
+vlog -sv rtl/*.sv tb/*.sv
+vsim -c spi_modes_tb -do "run -all; quit -f"
+```
